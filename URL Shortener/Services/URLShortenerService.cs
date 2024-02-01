@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
+using URL_Shortener.IService;
 
 namespace URL_Shortener.Services
 {
-    public class URLShortenerService
+    public class URLShortenerService : IURLShortenerService
     {
         public const int maxUrlLenght = 7;
         public const string alphabets = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
