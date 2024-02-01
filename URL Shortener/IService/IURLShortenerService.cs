@@ -2,6 +2,7 @@
 {
     public interface IURLShortenerService
     {
-        Task<string> GenerateUniqueCode();
+        Task<string> GenerateUniqueCodeAsync();
+        Task<string> GenerateShortUrlAsync(string code, string Url);
     }
 }

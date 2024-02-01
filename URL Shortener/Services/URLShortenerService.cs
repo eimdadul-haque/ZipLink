@@ -1,22 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
 using URL_Shortener.IService;
+using URL_Shortener.Models.Entities;
 
 namespace URL_Shortener.Services
 {
     public class URLShortenerService : IURLShortenerService
     {
-        public const int maxUrlLenght = 7;
-        public const string alphabets = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        private readonly Random random = new Random();
+        public const string alphabets = 
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+        public const int maxUrlLenght = 7;
+        private readonly Random random = new Random();
         private readonly URLShortenerDbContext _dbContext;
-        public URLShortenerService(URLShortenerDbContext dbContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public URLShortenerService(
+            URLShortenerDbContext dbContext,
+            IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
+            _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<string> GenerateUniqueCode()
+        public async Task<string> GenerateUniqueCodeAsync()
         {
             while (true)
             {
@@ -40,6 +48,31 @@ namespace URL_Shortener.Services
                     return code;
                 }
             }
+        }
+
+        public async Task<string> GenerateShortUrlAsync(string code, string Url)
+        {
+            var request = _httpContextAccessor?
+                .HttpContext?
+                .Request;
+
+            var url = new Url()
+            {
+                Id = Guid.NewGuid(),
+                CreatedOnUtc = DateTime.UtcNow,
+                RealUrl = Url,
+                Code = code,
+                ShortUrl = $"{request?.Scheme}://{request?.Host}/{code}"
+            };
+            
+            await _dbContext.Urls.AddAsync(url);
+            int row = await _dbContext.SaveChangesAsync();
+            if(row > 0)
+            {
+                throw new Exception("Error in insertion.");
+            }
+
+            return url.ShortUrl;
         }
     }
 }
