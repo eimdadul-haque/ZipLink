@@ -1,0 +1,23 @@
+//For logging 
+builder.Host.UseSerilog((context, loggerConfig) 
+    => loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+      "Serilog": {
+    "Using": ["Serilog.Sinks.File"],
+    "MinimumLevel": {
+      "Default": "Debug",
+      "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+      "Override": {
+        "Microsoft": "Information"
+      },
+      "WriteTo": [
+        {
+          "Name": "File",
+          "Args": {
+            "Path": "logs/log-.txt",
+            "rollingInterval": "Day"
+          }
+        }
+      ]
+    }
+  },
