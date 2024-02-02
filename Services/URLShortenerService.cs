@@ -66,12 +66,7 @@ namespace URL_Shortener.Services
             };
             
             await _dbContext.Urls.AddAsync(url);
-            int row = await _dbContext.SaveChangesAsync();
-            if(row > 0)
-            {
-                throw new Exception("Error in insertion.");
-            }
-
+            await _dbContext.SaveChangesAsync();
             return url.ShortUrl;
         }
     }
