@@ -16,7 +16,7 @@ namespace URL_Shortener.Data
             modelBuilder.Entity<Url>(builder =>
             {
                 builder
-                .Property(s => s.ShortUrl)
+                .Property(s => s.Code)
                 .HasMaxLength(URLShortenerService.maxUrlLenght);
 
                 builder
