@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using URL_Shortener.IService;
 using URL_Shortener.Models.Dtos;
+using URL_Shortener.Models.Entities;
 
 namespace URL_Shortener.Controllers
 {
-    [Route("api/[Controller]")]
     [ApiController]
+    [Route("api/[Controller]")]
     public class UrlShortenerController : ControllerBase
     {
         private readonly IURLShortenerService _urlShortenerService;
@@ -16,11 +17,12 @@ namespace URL_Shortener.Controllers
         }
 
         [HttpPost("Short")]
-        public async Task<IActionResult> Short(UrlShortenerDto request)
+        public async Task<IActionResult> Short([FromBody] UrlShortenerDto request)
         {
-            if (Uri.TryCreate(request.Url, UriKind.Absolute, out _))
+
+            if (!Uri.TryCreate(request.Url, UriKind.Absolute, out Uri result))
             {
-                return BadRequest("Invaild url!");
+                return BadRequest("Invalid url.");
             }
 
             string code = await _urlShortenerService
