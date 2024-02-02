@@ -69,5 +69,19 @@ namespace URL_Shortener.Services
             await _dbContext.SaveChangesAsync();
             return url.ShortUrl;
         }
+
+        public async Task<string> GetUrlAsync(string code)
+        {
+            var url = await _dbContext.Urls
+                .AsNoTracking()
+                .FirstOrDefaultAsync(url => url.Code == code);
+
+            if(url is null)
+            {
+                throw new Exception("Url not exist.");
+            }
+
+            return url.RealUrl;
+        }
     }
 }

@@ -4,5 +4,6 @@
     {
         Task<string> GenerateUniqueCodeAsync();
         Task<string> GenerateShortUrlAsync(string code, string Url);
+        Task<string> GetUrlAsync(string code);
     }
 }
