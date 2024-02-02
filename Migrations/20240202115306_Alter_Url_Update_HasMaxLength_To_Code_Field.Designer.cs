@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using URL_Shortener.Data;
 
@@ -11,9 +12,11 @@ using URL_Shortener.Data;
 namespace URL_Shortener.Migrations
 {
     [DbContext(typeof(URLShortenerDbContext))]
-    partial class URLShortenerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240202115306_Alter_Url_Update_HasMaxLength_To_Code_Field")]
+    partial class Alter_Url_Update_HasMaxLength_To_Code_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
