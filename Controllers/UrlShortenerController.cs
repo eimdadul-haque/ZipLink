@@ -6,7 +6,6 @@ using URL_Shortener.Models.Entities;
 namespace URL_Shortener.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
     public class UrlShortenerController : ControllerBase
     {
         private readonly IURLShortenerService _urlShortenerService;
@@ -17,7 +16,7 @@ namespace URL_Shortener.Controllers
         }
 
         [HttpPost("Short")]
-        public async Task<IActionResult> Short([FromBody] UrlShortenerDto request)
+        public async Task<IActionResult> Short(UrlShortenerDto request)
         {
 
             if (!Uri.TryCreate(request.Url, UriKind.Absolute, out Uri result))
@@ -32,6 +31,25 @@ namespace URL_Shortener.Controllers
                 .GenerateShortUrlAsync(code, request.Url);
 
             return Ok(shortUrl);
+        }
+
+        [HttpGet("{code}")]
+        public async Task<IActionResult> RedirctToUrl(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+            {
+                return BadRequest();
+            }
+
+            string urlString = await _urlShortenerService
+                .GetUrlAsync(code);
+
+            if (string.IsNullOrEmpty(urlString))
+            {
+                return NotFound();
+            }
+
+            return Redirect(urlString);
         }
     }
 }
